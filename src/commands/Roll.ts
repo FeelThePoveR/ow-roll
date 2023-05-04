@@ -1,9 +1,13 @@
 import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
 import characterData from "../data/characters.json";
+import Chance from "chance";
 
-const damageCharacters = characterData.damage;
-const supportCharacters = characterData.support;
-const tankCharacters = characterData.tank;
+let damageCharacters = characterData.damage;
+let supportCharacters = characterData.support;
+let tankCharacters = characterData.tank;
+
+const chance = new Chance();
+const discordMaxLineLength = 61;
 
 const Roll = {
 	data: new SlashCommandBuilder()
@@ -24,34 +28,37 @@ const Roll = {
 			namesList.push(element);
 		});
 
-		let tempDmg = damageCharacters;
-		let tempSup = supportCharacters;
-		let tempTank = tankCharacters;
+		const tankCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=tank&locale=en-us");
+		const dmgCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=damage&locale=en-us");
+		const supportCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=support&locale=en-us");
 
-		let rolledChars = [] as any[];
+		if (tankCharsReq.ok && dmgCharsReq.ok && supportCharsReq.ok) {
+			tankCharacters = await tankCharsReq.json();
+			damageCharacters = await dmgCharsReq.json();
+			supportCharacters = await supportCharsReq.json();
+		}
 
-		namesList.forEach((name: string) => {
-			let rollTankInt = rollRandomInt(tempTank.length);
-			let rollDmgInt = rollRandomInt(tempDmg.length);
-			let rollSupInt = rollRandomInt(tempSup.length);
-
-			rolledChars.push({ name: name, tank: tempTank[rollTankInt], dmg: tempDmg[rollDmgInt], sup: tempSup[rollSupInt] });
-
-			tempDmg.splice(rollDmgInt, 1);
-			tempSup.splice(rollSupInt, 1);
-			tempTank.splice(rollTankInt, 1);
-		});
+		const tankRolls = chance.unique(chance.natural, namesList.length, { min: 0, max: tankCharacters.length - 1 });
+		const dmgRolls = chance.unique(chance.natural, namesList.length, { min: 0, max: damageCharacters.length - 1 });
+		const suppRolls = chance.unique(chance.natural, namesList.length, { min: 0, max: supportCharacters.length - 1 });
 
 		let fields = [] as any[];
 
-		let separatorString = "----------------------------";
+		for (let i = 0; i < namesList.length; i++) {
+			const separatorLength = Math.floor(discordMaxLineLength - namesList[i].length) / 2;
+			fields.push({
+				name: " ",
+				value:
+					"```" +
+					String(namesList[i])
+						.padStart(separatorLength + namesList[i].length, "-")
+						.padEnd(discordMaxLineLength, "-") +
+					"```",
+			});
 
-		for (let i = 0; i < rolledChars.length; i++) {
-			fields.push({ name: " ", value: "```" + separatorString + String(rolledChars[i].name) + separatorString + "```" });
-
-			fields.push({ name: "Tank", value: rolledChars[i].tank, inline: true });
-			fields.push({ name: "Damage", value: rolledChars[i].dmg, inline: true });
-			fields.push({ name: "Support", value: rolledChars[i].sup, inline: true });
+			fields.push({ name: "Tank", value: tankCharacters[tankRolls[i]].name, inline: true });
+			fields.push({ name: "Damage", value: damageCharacters[dmgRolls[i]].name, inline: true });
+			fields.push({ name: "Support", value: supportCharacters[suppRolls[i]].name, inline: true });
 		}
 
 		const embed = new EmbedBuilder().setColor(0x0099ff).addFields(fields);
@@ -59,9 +66,5 @@ const Roll = {
 		await interaction.reply({ embeds: [embed] });
 	},
 };
-
-function rollRandomInt(max: number) {
-	return (Math.random() * max) | 0;
-}
 
 export default Roll;

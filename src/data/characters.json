@@ -1,23 +1,45 @@
 {
-	"tank": ["D.Va", "Doomfist", "Junker Queen", "Orisa", "Ramattra", "Reinhardt", "Roadhog", "Sigma", "Winston", "Wrecking Ball", "Zarya"],
-	"damage": [
-		"Ashe",
-		"Bastion",
-		"Cassidy",
-		"Echo",
-		"Genji",
-		"Hanzo",
-		"Junkrat",
-		"Mei",
-		"Pharah",
-		"Reaper",
-		"Sojourn",
-		"Soldier: 76",
-		"Sombra",
-		"Symmetra",
-		"Torbjorn",
-		"Torbjörn",
-		"Widowmaker"
+	"tank": [
+		{ "name": "D.Va" },
+		{ "name": "Doomfist" },
+		{ "name": "Junker Queen" },
+		{ "name": "Orisa" },
+		{ "name": "Ramattra" },
+		{ "name": "Reinhardt" },
+		{ "name": "Roadhog" },
+		{ "name": "Sigma" },
+		{ "name": "Winston" },
+		{ "name": "Wrecking Ball" },
+		{ "name": "Zarya" }
 	],
-	"support": ["Ana", "Baptiste", "Brigitte", "Kiriko", "Lifeweaver", "Lúcio", "Mercy", "Moira", "Zenyatta"]
+	"damage": [
+		{ "name": "Ashe" },
+		{ "name": "Bastion" },
+		{ "name": "Cassidy" },
+		{ "name": "Echo" },
+		{ "name": "Genji" },
+		{ "name": "Hanzo" },
+		{ "name": "Junkrat" },
+		{ "name": "Mei" },
+		{ "name": "Pharah" },
+		{ "name": "Reaper" },
+		{ "name": "Sojourn" },
+		{ "name": "Soldier: 76" },
+		{ "name": "Sombra" },
+		{ "name": "Symmetra" },
+		{ "name": "Torbjörn" },
+		{ "name": "Tracer" },
+		{ "name": "Widowmaker" }
+	],
+	"support": [
+		{ "name": "Ana" },
+		{ "name": "Baptiste" },
+		{ "name": "Brigitte" },
+		{ "name": "Kiriko" },
+		{ "name": "Lifeweaver" },
+		{ "name": "Lúcio" },
+		{ "name": "Mercy" },
+		{ "name": "Moira" },
+		{ "name": "Zenyatta" }
+	]
 }
