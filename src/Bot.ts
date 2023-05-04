@@ -17,6 +17,7 @@ const client = new Client({
 const rest = new REST({ version: "10" }).setToken(TOKEN);
 
 client.once(Events.ClientReady, (c) => {
+	c.user.setActivity("Keep rollin', rollin', rollin', rollin'");
 	console.log("Discord bot ready!");
 });
 
