@@ -9,6 +9,9 @@ let tankCharacters = characterData.tank;
 const chance = new Chance();
 const discordMaxLineLength = 61;
 
+const msPerDay = 8.64e7;
+let lastFetchDate: Date;
+
 const Roll = {
 	data: new SlashCommandBuilder()
 		.setName("roll")
@@ -28,14 +31,14 @@ const Roll = {
 			namesList.push(element);
 		});
 
-		const tankCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=tank&locale=en-us");
-		const dmgCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=damage&locale=en-us");
-		const supportCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=support&locale=en-us");
+		if (!lastFetchDate) {
+			lastFetchDate = new Date();
 
-		if (tankCharsReq.ok && dmgCharsReq.ok && supportCharsReq.ok) {
-			tankCharacters = await tankCharsReq.json();
-			damageCharacters = await dmgCharsReq.json();
-			supportCharacters = await supportCharsReq.json();
+			await fetchCharacterData();
+		} else if (hasDayPassed()) {
+			lastFetchDate = new Date();
+
+			await fetchCharacterData();
 		}
 
 		const tankRolls = chance.unique(chance.natural, namesList.length, { min: 0, max: tankCharacters.length - 1 });
@@ -65,6 +68,22 @@ const Roll = {
 
 		await interaction.reply({ embeds: [embed] });
 	},
+};
+
+const fetchCharacterData = async () => {
+	const tankCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=tank&locale=en-us");
+	const dmgCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=damage&locale=en-us");
+	const supportCharsReq = await fetch("https://overfast-api.tekrop.fr/heroes?role=support&locale=en-us");
+
+	if (tankCharsReq.ok && dmgCharsReq.ok && supportCharsReq.ok) {
+		tankCharacters = await tankCharsReq.json();
+		damageCharacters = await dmgCharsReq.json();
+		supportCharacters = await supportCharsReq.json();
+	}
+};
+
+const hasDayPassed = () => {
+	return lastFetchDate.getTime() + msPerDay < new Date().getTime();
 };
 
 export default Roll;
