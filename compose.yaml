@@ -8,4 +8,7 @@ services:
     env_file:
       - path: .env
         required: false
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      CLIENT_ID: ${CLIENT_ID}
     restart: unless-stopped
