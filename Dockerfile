@@ -1,4 +1,4 @@
-FROM node:18.7.0-slim AS base
+FROM node:20-slim AS base
 
 # Install dependencies
 FROM base AS dependencies
@@ -15,7 +15,7 @@ FROM dependencies AS builder
 COPY . .
 
 # Run tsc build
-RUN npm install typescript -g
+RUN npm install typescript@7.0.2 -g
 RUN npm run build
 
 # Only keep what's necessary to run
