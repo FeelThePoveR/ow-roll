@@ -23,10 +23,8 @@ FROM base AS runner
 
 WORKDIR /usr/app
 
-COPY --from=builder /usr/app/.env ./dist/.env
 COPY --from=builder /usr/app/dist ./dist
 COPY --from=dependencies /usr/app/prod_node_modules node_modules
-
-COPY . .
+COPY --from=builder /usr/app/package.json ./package.json
 
 CMD ["npm", "start"]
