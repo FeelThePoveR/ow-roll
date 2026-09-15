@@ -1,0 +1,11 @@
+services:
+  ow-roll:
+    image: ow-roll:latest
+    container_name: ow-roll
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
